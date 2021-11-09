@@ -1,5 +1,16 @@
 from pico2d import *
 
+import game_framework
+import mariotitle_state
+
+
+
+name = "MarioMainState"
+
+mario = None
+blocks = None
+font = None
+
 class Block:
     def __init__(self):
         self.image = load_image('block_sheet.png')
@@ -62,6 +73,11 @@ class Mario:
             self.y = 80
         self.frame = (self.frame + 1) % 3
 
+def enter():
+    global mario, blocks
+    mario = Mario()
+    blocks = Block()
+
 def handle_events():
     global inprogress
     global mariomove
@@ -102,10 +118,9 @@ def handle_events():
                 notjump = True
                 mariojump -= 10
 
-
 open_canvas()
 
-block = Block()
+blocks = Block()
 mario = Mario()
 
 inprogress = True
@@ -121,12 +136,12 @@ while inprogress:
     handle_events()
     mario.update()
     clear_canvas()
-    block.draw_floor()
-    block.draw_stair()
-    block.draw_itemblock()
-    block.draw_brokenblock()
+    blocks.draw_floor()
+    blocks.draw_stair()
+    blocks.draw_itemblock()
+    blocks.draw_brokenblock()
     mario.draw()
     update_canvas()
 
 
-    delay(0.04)
+    delay(0.01)
