@@ -82,11 +82,11 @@ def quit():
     running = False
 
 
-def run(mariostart_state):
+def run(start_state):
     global running, stack
     running = True
-    stack = [mariostart_state]
-    mariostart_state.enter()
+    stack = [start_state]
+    start_state.enter()
     while (running):
         stack[-1].handle_events()
         stack[-1].update()
@@ -98,8 +98,8 @@ def run(mariostart_state):
 
 
 def test_game_framework():
-    mariostart_state = TestGameState('MarioStartState')
-    run(mariostart_state)
+    start_state = TestGameState('StartState')
+    run(start_state)
 
 
 

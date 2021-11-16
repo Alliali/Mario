@@ -1,12 +1,18 @@
+import random
+import json
+import os
+
 from pico2d import *
-
+import game_world
 import game_framework
-import mariotitle_state
 
+# import mariotitle_state
 
+from maingrass import Maingrass
 
 name = "MarioMainState"
 
+maingrass = None
 mario = None
 blocks = None
 font = None
@@ -16,11 +22,6 @@ class Block:
         self.image = load_image('block_sheet.png')
         self.Wblksize, self.Hblksize = 50, 50
 
-    def draw_floor(self):
-        self.x, self.y = 25, 25
-        for i in range(26):
-            self.image.clip_draw(60, 250, 160, 160, self.x, self.y, self.Wblksize, self.Hblksize)
-            self.x += 50
     def draw_stair(self):
         self.x, self.y = 350, 300
         self.image.clip_draw(270, 250, 160, 160, self.x, self.y, self.Wblksize, self.Hblksize)
@@ -45,7 +46,7 @@ class Mario:
                 if notjump == False:
                     self.image.clip_draw(352, 340, 22, 18, self.x, self.y, self.mwsize, self.mhsize)
                 elif notjump == True:
-                    self.image.clip_draw(290+self.frame * 15, 340, 15, 18, self.x, self.y, self.mwsize, self.mhsize)
+                    self.image.clip_draw(290 + self.frame * 15, 340, 15, 18, self.x, self.y, self.mwsize, self.mhsize)
             elif rightmove == False:
                 if notjump == False:
                     self.image.clip_draw(352, 340, 22, 18, self.x, self.y, self.mwsize, self.mhsize)
@@ -74,9 +75,16 @@ class Mario:
         self.frame = (self.frame + 1) % 3
 
 def enter():
-    global mario, blocks
+    global mario, blocks, maingrass
+    maingrass = Maingrass()
     mario = Mario()
     blocks = Block()
+    game_world.add_object(maingrass, 0)
+
+def exit():
+    global mario, blocks, maingrass
+    del maingrass
+    game_world.clear()
 
 def handle_events():
     global inprogress
@@ -136,7 +144,8 @@ while inprogress:
     handle_events()
     mario.update()
     clear_canvas()
-    blocks.draw_floor()
+    # blocks.draw_floor()
+    maingrass.draw()
     blocks.draw_stair()
     blocks.draw_itemblock()
     blocks.draw_brokenblock()

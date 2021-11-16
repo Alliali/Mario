@@ -1,5 +1,5 @@
 import game_framework
-import mariomain_state
+import mariomain_stated
 
 from pico2d import *
 
@@ -27,7 +27,7 @@ def handle_events():
             if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
                 game_framework.quit()
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_SPACE):
-                game_framework.change_state(mariomain_state)
+                game_framework.change_state(mariomain_stated)
 
 
 def draw():
