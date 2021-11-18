@@ -15,3 +15,7 @@ class Maingrass:
         for i in range(34):
             self.image.clip_draw(60, 250, 160, 160, self.x, self.y, self.Wsize, self.Hsize)
             self.x += 50
+        draw_rectangle(*self.get_bb())
+
+    def get_bb(self):
+        return 0, 0, 1600-1, 50
