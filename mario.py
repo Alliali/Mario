@@ -53,11 +53,16 @@ class IdleState:
             mario.velocity -= RUN_SPEED_PPS
         elif event == LEFT_UP:
             mario.velocity += RUN_SPEED_PPS
+        if event == Jump:
+            mario.jump()
         mario.timer = 1000
 
     def exit(mario, event):
-        if event == Jump:
-            pass
+        pass
+        # if event == Jump:
+        #     for jump in range(20):
+        #         print('forrun')
+        #         mario.jump()
 
     def do(mario):
         mario.timer -= 1
@@ -83,8 +88,11 @@ class RunState:
         mario.dir = clamp(-1, mario.velocity, 1)
 
     def exit(mario, event):
-        if event == Jump:
-            pass
+        pass
+        # if event == Jump:
+        #     for jump in range(20):
+        #         print('forrun')
+        #         mario.jump()
 
     def do(mario):
         mario.frame = (mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
@@ -106,9 +114,12 @@ class DashState:
         mario.dir = mario.velocity
 
     def exit(mario, event):
-        if event == Jump:
-            pass
-        print('EXIT DASH')
+        pass
+        # if event == Jump:
+        #     for jump in range(20):
+        #         print('forrun')
+        #         mario.jump()
+        # print('EXIT DASH')
 
     def do(mario):
         mario.frame = (mario.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
@@ -171,7 +182,9 @@ class Mario:
         self.image = load_image('marios.png')
         self.dir = 1
         self.velocity = 0
-        self.gravity = 0
+        self.yvelocity = 0
+        self.gravity = 1
+        self.jumptimer = 100
         self.frame = 0
         self.event_que = []
         self.cur_state = IdleState
@@ -181,14 +194,21 @@ class Mario:
         return self.x - 25, self.y - 30, self.x + 25, self.y + 30
 
     def jump(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
-        self.y += (self.velocity * 2) * game_framework.frame_time
-        self.y = clamp(25, self.y, 800 - 25)
-
-        if self.dir >= 1:
-            self.clip_draw(352, 340, 22, 18, self.x, self.y, 60, 60)
-        else:
-            self.clip_draw(140, 340, 19, 18, self.x, self.y, 60, 60)
+        self.yvelocity += JUMP_PPS
+        if self.jumptimer > 0:
+            self.jumptimer -= 1
+            # self.dir = self.velocity
+            # self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
+            self.y += (self.yvelocity * 1) * game_framework.frame_time
+            self.y = clamp(78, self.y, 800 - 25)
+            if self.dir >= 1:
+                self.image.clip_draw(352, 340, 22, 18, self.x, self.y, 60, 60)
+                print("RUN")
+            else:
+                self.image.clip_draw(140, 340, 19, 18, self.x, self.y, 60, 60)
+                print("RUN")
+        if self.jumptimer == 0:
+            self.jumptimer = 100
 
     def add_event(self, event):
         self.event_que.insert(0, event)
